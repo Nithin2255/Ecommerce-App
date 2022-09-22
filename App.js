@@ -1,20 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import RegistrationScreen from "./app/screen/auth/RegistrationScreen";
+import UserLoginScreen from "./app/screen/auth/UserLoginScreen";
+import ShopTab from "./app/screen/shop/ShopTab";
+import SendPasswordResetEmailScreen from "./app/screen/auth/SendPasswordResetEmailScreen";
+import UserPanelTab from "./app/screen/UserPanelTab";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions = {{ headerStyle: {backgroundColor: 'purple'}, headerTintColor: 'white'}} >
+        <Stack.Screen name = "ShopTab" component = {ShopTab} options = {{ headerShown:false }} />
+        <Stack.Screen name = "UserLogin" component = {UserLoginScreen} options = {{ title: 'User Login'}} />
+        <Stack.Screen name = "Registration" component = {RegistrationScreen} options = {{ headerBackVisible: false }} />
+        <Stack.Screen name = "SendPasswordResetEmail" component = {SendPasswordResetEmailScreen} options = {{ title: 'Forgot Password'}}/>
+        <Stack.Screen name = "UserPanelTab" component = {UserPanelTab} options = {{ headerShown: false}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
