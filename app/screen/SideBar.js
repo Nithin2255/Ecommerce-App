@@ -2,10 +2,12 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
 import { useNavigation } from '@react-navigation/native'
+import { removeToken } from '../../services/AsyncStorageServices';
 
 const SideBar = ({ ...props }) => {
-    const handleLogout = () => {
-        navigation.navigate('Home'); console.log("Logout")
+    const handleLogout = async () => {
+      await removeToken()
+      navigation.navigate('Home'); console.log("Logout")
     }
     const navigation = useNavigation()
   return (

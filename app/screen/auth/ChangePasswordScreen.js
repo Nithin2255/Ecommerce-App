@@ -7,16 +7,16 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast'
 
 const ChangePasswordScreen = () => {
     const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const [password2, setPassword2] = useState("")
 
     const clearTextInput = () => {
         setPassword('')
-        setConfirmPassword('')
+        setPassword2('')
     }
 
     const handleFormSubmit = () => {
-        if (password && confirmPassword) {
-            if (password === confirmPassword) {
+        if (password && password2) {
+            if (password === password2) {
                 console.log("Password changed Successfully")
                 const formData = { password }
                 console.log(formData)
@@ -66,7 +66,7 @@ const ChangePasswordScreen = () => {
                     }>New Confirm Password</Text>
                     <TextInput style = {
                     styles.input
-                    } value = {confirmPassword} onChangeText = {setConfirmPassword} placeholder = "Enter New confirm password" onPress = {console.log(confirmPassword)} secureTextEntry = { true } />
+                    } value = {password2} onChangeText = {setPassword2} placeholder = "Enter New confirm password" onPress = {console.log(password2)} secureTextEntry = { true } />
                 </View>
                 <View style = {{ width: 200, alignSelf: 'center', margin: 20}} >
                     <Button title = 'Save' onPress = { handleFormSubmit } color = 'purple' />

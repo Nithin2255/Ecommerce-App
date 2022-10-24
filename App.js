@@ -6,18 +6,29 @@ import ShopTab from "./app/screen/shop/ShopTab";
 import SendPasswordResetEmailScreen from "./app/screen/auth/SendPasswordResetEmailScreen";
 import UserPanelTab from "./app/screen/UserPanelTab";
 
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions = {{ headerStyle: {backgroundColor: 'purple'}, headerTintColor: 'white'}} >
         <Stack.Screen name = "ShopTab" component = {ShopTab} options = {{ headerShown:false }} />
-        <Stack.Screen name = "UserLogin" component = {UserLoginScreen} options = {{ title: 'User Login'}} />
+        <Stack.Screen name = "UserLogin" component = {UserLoginScreen} options = {{ headerShown: false}} />
         <Stack.Screen name = "Registration" component = {RegistrationScreen} options = {{ headerBackVisible: false }} />
         <Stack.Screen name = "SendPasswordResetEmail" component = {SendPasswordResetEmailScreen} options = {{ title: 'Forgot Password'}}/>
         <Stack.Screen name = "UserPanelTab" component = {UserPanelTab} options = {{ headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+export default () => {
+  return (
+    <Provider store = { store }>
+      <App />
+    </Provider>
+  )
 }

@@ -8,54 +8,51 @@ import { useNavigation } from '@react-navigation/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import Checkbox from 'expo-checkbox'
 
+import { useRegisterUserMutation } from '../../../services/userAuthApi'
+import { storeToken } from '../../../services/AsyncStorageServices'
+
 const RegistrationScreen = () => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [tc, setTc] = useState(false);
+    const [password2, setPassword2] = useState("")
+    const [tc, setTc] = useState(null);
 
     const clearTextInput = () => {
         setName('')
         setEmail('')
         setPassword('')
-        setConfirmPassword('')
-        setTc(false)
+        setPassword2('')
+        setTc(null)
     }
 
     const navigation = useNavigation();
 
-    const handleFormSubmit = () => {
-        if (name, email && password && confirmPassword && tc) {
-            if (password === confirmPassword){
-                console.log("Login Success")
-                const formData = { name, email, password, confirmPassword, tc }
-                console.log(formData)
-                clearTextInput()
-                Toast.show({
-                    type: 'done',
-                    position: 'top',
-                    topOffset: 0,
-                    text1: "Login Success"
-            })
-            }else {
-                console.log("All fields are Required")
-                Toast.show({
-                    type: 'warning',
-                    position: 'top',
-                    topOffset: 0,
-                    text1: "Password & Confirm Password doesn't match"
-                })
-            }
-        }else {
-            console.log("All fields are Required")
-            Toast.show({
-                type: 'warning',
-                position: 'top',
-                topOffset: 0,
-                text1: "All fields are Required"
-            })
-        }
+    const [registerUser] = useRegisterUserMutation()
+
+    const handleFormSubmit = async () => {
+      const formData = { name, email, password, password2, tc }
+      const res = await registerUser(formData)
+      // console.log("response:",res)
+      if (res.data){
+        // console.log("Response Data", res.data)
+        await storeToken(res.data.token)
+        clearTextInput()
+        navigation.navigate('UserPanelTab')
+      }
+      if (res.error){
+        // console.log("Response Error", res.error.data.errors)
+        Toast.show({
+          type: 'warning',
+          position: 'top',
+          topOffset: 0,
+          ...(res.error.data.errors.name ? { text1: res.error.data.errors.name[0] } : ''),
+          ...(res.error.data.errors.email ? { text1: res.error.data.errors.email[0] } : ''),
+          ...(res.error.data.errors.password ? { text1: res.error.data.errors.password2[0] } : ''),
+          ...(res.error.data.errors.tc ? { text1: res.error.data.errors.tc[0] } : ''),
+          ...(res.error.data.errors.non_field_errors ? { text1: res.error.data.errors.non_field_errors[0] } : ''),
+        })
+      }
     }
 
   return (
@@ -72,7 +69,7 @@ const RegistrationScreen = () => {
             }>Name</Text>
             <TextInput style = {
               styles.input
-            } value = {name} onChangeText = {setName} placeholder = "Enter name" onPress = {console.log(name)}/>
+            } value = {name} onChangeText = {setName} placeholder = "Enter name"/>
           </View>
           <View style = { styles.inputWithLabel }>
             <Text style = {
@@ -80,7 +77,7 @@ const RegistrationScreen = () => {
             }>Email</Text>
             <TextInput style = {
               styles.input
-            } value = {email} onChangeText = {setEmail} placeholder = "Enter email" onPress = {console.log(email)} keyboardType = 'email-address' />
+            } value = {email} onChangeText = {setEmail} placeholder = "Enter email" keyboardType = 'email-address' />
           </View>
           <View style = { styles.inputWithLabel }>
             <Text style = {
@@ -88,7 +85,7 @@ const RegistrationScreen = () => {
             }>Password</Text>
             <TextInput style = {
               styles.input
-            } value = {password} onChangeText = {setPassword} placeholder = "Enter password" onPress = {console.log(password)} secureTextEntry = { true } />
+            } value = {password} onChangeText = {setPassword} placeholder = "Enter password" secureTextEntry = { true } />
           </View>
           <View style = { styles.inputWithLabel }>
             <Text style = {
@@ -96,7 +93,7 @@ const RegistrationScreen = () => {
             }>Confirm Password</Text>
             <TextInput style = {
               styles.input
-            } value = {confirmPassword} onChangeText = {setConfirmPassword} placeholder = "Enter confirm password" onPress = {console.log(confirmPassword)} secureTextEntry = { true } />
+            } value = {password2} onChangeText = {setPassword2} placeholder = "Enter confirm password" secureTextEntry = { true } />
           </View>
           <View style = {{ flex: 1, flexDirection: 'row' }}>
             <Checkbox value = {tc} onValueChange = {setTc} color = {tc? '#4630EB' : undefined }/>
